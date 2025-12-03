@@ -5,12 +5,12 @@ using UnityEngine;
 public class Gameplay_manager : MonoBehaviour
 {
     // Start is called before the first frame update
-    public enum states {First_state,Shuffle, Distribute,Play};
+    public enum states {First_state,Shuffle, Distribute,reveal_cards,Play};
     public states state;
     private delegate void deg();
     private deg mydeg;
     private float timer;
-    public GameObject Deck;
+    public GameObject Deck; 
     void Start()
     {
         
@@ -53,7 +53,7 @@ public class Gameplay_manager : MonoBehaviour
 
 
             break;
-                // Distribute the Cards
+            // Distribute the Cards
             case states.Distribute:
 
 
@@ -61,8 +61,18 @@ public class Gameplay_manager : MonoBehaviour
 
 
                 break;
+            // Reveal the cards for few seconds
+            case states.reveal_cards:
 
 
+
+
+
+
+
+
+
+            break;
 
 
                 // the state of playing the Game
