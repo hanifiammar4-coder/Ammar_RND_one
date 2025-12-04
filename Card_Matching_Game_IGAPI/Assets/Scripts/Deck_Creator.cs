@@ -22,6 +22,7 @@ public class Deck_Creator : MonoBehaviour
     {
         int i= 0;
         int rnd = 0;
+        
         int half_Cards_number = (Positions_Arranger.GetComponent<Positions_Arranger>().Rows*
         Positions_Arranger.GetComponent<Positions_Arranger>().Columns)/2;
         while (i<half_Cards_number)
@@ -76,6 +77,8 @@ public class Deck_Creator : MonoBehaviour
             {
                 child.GetChild(0).GetChild(0).GetComponent<Renderer>().material.mainTexture =
             Textures[Cards_indexes[i]];
+                child.GetComponent<Card_Behaviour>().Card_index=Cards_indexes[i];
+                child.GetComponent<Card_Behaviour>().pos_ind = i;
             }
             else
             {
@@ -89,7 +92,9 @@ public class Deck_Creator : MonoBehaviour
 
 
         });
+        GameObject.Find("Game_manager").GetComponent<Gameplay_manager>().state =
+        Gameplay_manager.states.Distribute;
     }
 
-
+    
 }
