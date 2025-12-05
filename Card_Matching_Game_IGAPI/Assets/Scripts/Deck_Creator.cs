@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +13,25 @@ public class Deck_Creator : MonoBehaviour
     public GameObject Positions_Arranger;
     public GameObject card_prefab;
     public GameObject Deck;
+    public Action start_new,Load;
     void Start()
     {
-        StartCoroutine(choose_Textures());
+
+        start_new = () =>
+        {
+
+            StartCoroutine(choose_Textures());
+
+        };
+        Load = () =>
+        {
+            
+            
+            StartCoroutine(Load_game());
+
+
+        };
+        
     }
 
     // Update is called once per frame
@@ -22,7 +39,7 @@ public class Deck_Creator : MonoBehaviour
     {
         int i= 0;
         int rnd = 0;
-        
+        Cards_indexes.Clear();
         int half_Cards_number = (Positions_Arranger.GetComponent<Positions_Arranger>().Rows*
         Positions_Arranger.GetComponent<Positions_Arranger>().Columns)/2;
         while (i<half_Cards_number)
@@ -53,7 +70,7 @@ public class Deck_Creator : MonoBehaviour
         {
             // Get a random number from a the cards indexer list and swap it with another
             int saver = 0;
-            int rndm=Random.Range(0, Cards_indexes.Count);
+            int rndm=UnityEngine.Random.Range(0, Cards_indexes.Count);
             saver = Cards_indexes[i];
             Cards_indexes[i]=Cards_indexes[rndm];
             Cards_indexes[rndm]=saver;
@@ -75,6 +92,7 @@ public class Deck_Creator : MonoBehaviour
         children.ForEach(child => {
             if (i < Cards_indexes.Count)
             {
+                child.gameObject.SetActive(true);
                 child.GetChild(0).GetChild(0).GetComponent<Renderer>().material.mainTexture =
             Textures[Cards_indexes[i]];
                 child.GetComponent<Card_Behaviour>().Card_index=Cards_indexes[i];
@@ -96,5 +114,38 @@ public class Deck_Creator : MonoBehaviour
         Gameplay_manager.states.Distribute;
     }
 
-    
+    private IEnumerator Load_game()
+    {
+
+        yield return new WaitForSeconds(1);
+        var children = Deck.transform.Cast<Transform>().ToList();
+        int i = 0;
+        // Use a lambda to filter and destroy a specified number of children
+        children.ForEach(child => {
+            if (i < Cards_indexes.Count)
+            {
+                child.gameObject.SetActive(true);
+                child.GetChild(0).GetChild(0).GetComponent<Renderer>().material.mainTexture =
+            Textures[Cards_indexes[i]];
+                child.GetComponent<Card_Behaviour>().Card_index = Cards_indexes[i];
+                
+            }
+            else
+            {
+
+                child.gameObject.SetActive(false);
+
+            }
+
+            i++;
+
+
+
+        });
+        GameObject.Find("Game_manager").GetComponent<Gameplay_manager>().state =
+        Gameplay_manager.states.Distribute;
+
+
+
+    }
 }

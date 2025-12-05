@@ -15,23 +15,28 @@ public class Positions_Arranger : MonoBehaviour
     private List<GameObject> inst_card_holders=new List<GameObject>();
     void Start()
     {
-        Arrange_positions();
+        Arrange_position = () =>
+        {
+
+            StartCoroutine(Arrange_positions());
+
+        };
     }
 
 
-    void Arrange_positions()
+    public IEnumerator Arrange_positions()
     {
         // This will arrange the positions for all the     
-        
-        float offset_X = ((Rows - 1) / 2.0f);
-        float offset_y = ((Columns - 1) / 2.0f);
+        yield return new WaitForEndOfFrame();
+        float offset_X = ((Columns- 1) / 2.0f);
+        float offset_y = ((Rows - 1) / 2.0f);
         Debug.Log((offset_X));
         Debug.Log(offset_X);
-        
+        inst_card_holders.Clear();
         // Loop to arrange the positions
-        for (int i = 0; i < Rows; i++)
+        for (int i = 0; i < Columns; i++)
         {
-            for (int j =0; j < Columns ; j++)
+            for (int j =0; j < Rows ; j++)
             {
                
                 // Adjust the position this object
@@ -50,7 +55,7 @@ public class Positions_Arranger : MonoBehaviour
             foreach(GameObject vr in inst_card_holders)
             {
 
-                vr.transform.position+=((vr.transform.position - transform.position)) * 1.25f;
+                vr.transform.position+=((vr.transform.position - transform.position)) * 1.15f;
 
 
 

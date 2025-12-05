@@ -13,12 +13,14 @@ public class Card_Behaviour : MonoBehaviour
     private Vector3 my_position;
     private Quaternion nxt_Rot;
     public int Card_index;
-    public enum states {moving,Facce_down,Face_up,done,busy };
+    public AudioClip[] clips;
+    private AudioSource Audiosrce;
+    public enum states {moving,Facce_down,Face_up,done,busy};
     public states state;
     private GameObject manager;
     void Start()
     {
-
+        Audiosrce=GetComponent<AudioSource>();
         Act_ = () =>
         {
 
@@ -31,11 +33,20 @@ public class Card_Behaviour : MonoBehaviour
     }
     void go_to_pos()
     {
+        play_aud(2);
         transform.GetComponent<Animator>().SetBool("Lift", true);
         my_position = GameObject.Find("Positions_Arranger").transform.GetChild(pos_ind).transform.position;
         nxt_Rot= GameObject.Find("Positions_Arranger").transform.GetChild(pos_ind).transform.rotation;
-        transform.SetParent(null);
+        transform.SetParent(GameObject.Find("Cards_parent").transform);
         StartCoroutine(move_to());
+    }
+    private void play_aud(int clip_ind)
+    {
+        Audiosrce.pitch = UnityEngine.Random.Range(1f, 1.5f);
+        Audiosrce.clip = clips[clip_ind];
+        Audiosrce.Play();
+
+
     }
     IEnumerator move_to()
     {
@@ -51,7 +62,7 @@ public class Card_Behaviour : MonoBehaviour
         transform.GetComponent<Animator>().SetBool("Lift", false);
         manager = GameObject.Find("Game_manager");
         state=states.Facce_down;
-
+        play_aud(1);
 
     }
     private void OnMouseEnter()
@@ -66,7 +77,7 @@ public class Card_Behaviour : MonoBehaviour
        if(manager.GetComponent<Gameplay_manager>().state==Gameplay_manager.states.Play&&
             state == states.Facce_down)
         {
-
+            play_aud(0);
             transform.GetComponent<Animator>().SetBool("Flip", true);
             state=states.Face_up;
 
